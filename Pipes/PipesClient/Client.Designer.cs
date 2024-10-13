@@ -35,6 +35,8 @@
             this._tbMessage = new System.Windows.Forms.TextBox();
             this._lbLogin = new System.Windows.Forms.Label();
             this._tbLogin = new System.Windows.Forms.TextBox();
+            this._rtbMessages = new System.Windows.Forms.RichTextBox();
+            this._btLogin = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _btnSend
@@ -43,7 +45,7 @@
             this._btnSend.Location = new System.Drawing.Point(379, 114);
             this._btnSend.Margin = new System.Windows.Forms.Padding(4);
             this._btnSend.Name = "_btnSend";
-            this._btnSend.Size = new System.Drawing.Size(100, 28);
+            this._btnSend.Size = new System.Drawing.Size(135, 28);
             this._btnSend.TabIndex = 2;
             this._btnSend.Text = "Отправить";
             this._btnSend.UseVisualStyleBackColor = true;
@@ -80,6 +82,7 @@
             // 
             // _tbMessage
             // 
+            this._tbMessage.Enabled = false;
             this._tbMessage.Location = new System.Drawing.Point(120, 117);
             this._tbMessage.Margin = new System.Windows.Forms.Padding(4);
             this._tbMessage.Name = "_tbMessage";
@@ -106,11 +109,32 @@
             this._tbLogin.TabIndex = 4;
             this._tbLogin.TextChanged += new System.EventHandler(this.TbLogin_TextChanged);
             // 
+            // _rtbMessages
+            // 
+            this._rtbMessages.Location = new System.Drawing.Point(19, 158);
+            this._rtbMessages.Name = "_rtbMessages";
+            this._rtbMessages.Size = new System.Drawing.Size(495, 208);
+            this._rtbMessages.TabIndex = 5;
+            this._rtbMessages.Text = "";
+            // 
+            // _btLogin
+            // 
+            this._btLogin.Location = new System.Drawing.Point(379, 65);
+            this._btLogin.Margin = new System.Windows.Forms.Padding(4);
+            this._btLogin.Name = "_btLogin";
+            this._btLogin.Size = new System.Drawing.Size(135, 28);
+            this._btLogin.TabIndex = 6;
+            this._btLogin.Text = "Авторизоваться";
+            this._btLogin.UseVisualStyleBackColor = true;
+            this._btLogin.Click += new System.EventHandler(this.BtLogin_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 155);
+            this.ClientSize = new System.Drawing.Size(533, 378);
+            this.Controls.Add(this._btLogin);
+            this.Controls.Add(this._rtbMessages);
             this.Controls.Add(this._tbLogin);
             this.Controls.Add(this._lbLogin);
             this.Controls.Add(this._tbMessage);
@@ -122,6 +146,7 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Клиент";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing_1);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,5 +161,7 @@
         private System.Windows.Forms.TextBox _tbMessage;
         private System.Windows.Forms.Label _lbLogin;
         private System.Windows.Forms.TextBox _tbLogin;
+        private System.Windows.Forms.RichTextBox _rtbMessages;
+        private System.Windows.Forms.Button _btLogin;
     }
 }
