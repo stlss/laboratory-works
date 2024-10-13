@@ -50,12 +50,18 @@ namespace Pipes
                     Kernel32.FlushFileBuffers(_pipeHandle);
 
                     byte[] buff = new byte[1024];
-                    Kernel32.ReadFile(_pipeHandle, buff, 1024, ref realBytesReaded, 0);
+
+                    Kernel32.ReadFile(hFile: _pipeHandle, 
+                        lpBuffer: buff, 
+                        nNumberOfBytesToRead: 1024, 
+                        lpNumberOfBytesRead: ref realBytesReaded, 
+                        lpOverlapped: 0);
+
                     var msg = Encoding.Unicode.GetString(buff);
 
                     _rtbMessages.Invoke((MethodInvoker)delegate
                     {
-                        if (msg != "")
+                        if (msg != string.Empty)
                             _rtbMessages.Text += "\n >> " + msg;
                     });
 
