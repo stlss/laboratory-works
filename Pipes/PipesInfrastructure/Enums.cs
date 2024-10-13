@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace DIS
+namespace PipesInfrastructure
 {
-    public class Types
+    public static class Enums
     {
         [Flags]
         public enum EFileAccess : uint
@@ -14,6 +12,7 @@ namespace DIS
             GenericExecute = 0x20000000,
             GenericAll = 0x10000000
         }
+
         [Flags]
         public enum EFileShare : uint
         {
@@ -22,6 +21,7 @@ namespace DIS
             Write = 0x00000002,
             Delete = 0x00000004
         }
+
         public enum ECreationDisposition : uint
         {
             New = 1,
@@ -30,6 +30,7 @@ namespace DIS
             OpenAlways = 4,
             TruncateExisting = 5
         }
+
         [Flags]
         public enum EFileAttributes : uint
         {
@@ -59,15 +60,5 @@ namespace DIS
             OpenNoRecall = 0x00100000,
             FirstPipeInstance = 0x00080000
         }
-
-        public const uint PIPE_ACCESS_DUPLEX = 0x00000003;
-        public const uint PIPE_TYPE_BYTE = 0x00000000;
-        public const uint PIPE_TYPE_MESSAGE = 0x00000004;
-        public const uint PIPE_WAIT = 0x00000000;
-        public const uint PIPE_UNLIMITED_INSTANCES = 255;
-        public const int  NMPWAIT_WAIT_FOREVER = -1;
-        public const uint PIPE_OPEN_MODE = 0x00000003;
-
-        public const int MAILSLOT_WAIT_FOREVER = -1; 
     }
 }

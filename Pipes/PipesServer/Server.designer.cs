@@ -28,36 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.rtbMessages = new System.Windows.Forms.RichTextBox();
+            this._rtbMessages = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
-            // rtbMessages
+            // _rtbMessages
             // 
-            this.rtbMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbMessages.Location = new System.Drawing.Point(0, 0);
-            this.rtbMessages.Name = "rtbMessages";
-            this.rtbMessages.ReadOnly = true;
-            this.rtbMessages.Size = new System.Drawing.Size(389, 205);
-            this.rtbMessages.TabIndex = 0;
-            this.rtbMessages.Text = "";
+            this._rtbMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._rtbMessages.Location = new System.Drawing.Point(0, 0);
+            this._rtbMessages.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._rtbMessages.Name = "_rtbMessages";
+            this._rtbMessages.ReadOnly = true;
+            this._rtbMessages.Size = new System.Drawing.Size(519, 252);
+            this._rtbMessages.TabIndex = 0;
+            this._rtbMessages.Text = "";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(389, 205);
-            this.Controls.Add(this.rtbMessages);
+            this.ClientSize = new System.Drawing.Size(519, 252);
+            this.Controls.Add(this._rtbMessages);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Сервер";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox rtbMessages;
+        private System.Windows.Forms.RichTextBox _rtbMessages;
     }
 }
 
