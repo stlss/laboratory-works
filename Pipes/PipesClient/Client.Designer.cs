@@ -33,12 +33,14 @@
             this._tbPipe = new System.Windows.Forms.TextBox();
             this._lblMessage = new System.Windows.Forms.Label();
             this._tbMessage = new System.Windows.Forms.TextBox();
+            this._lbLogin = new System.Windows.Forms.Label();
+            this._tbLogin = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // _btnSend
             // 
             this._btnSend.Enabled = false;
-            this._btnSend.Location = new System.Drawing.Point(379, 65);
+            this._btnSend.Location = new System.Drawing.Point(379, 114);
             this._btnSend.Margin = new System.Windows.Forms.Padding(4);
             this._btnSend.Name = "_btnSend";
             this._btnSend.Size = new System.Drawing.Size(100, 28);
@@ -69,7 +71,7 @@
             // _lblMessage
             // 
             this._lblMessage.AutoSize = true;
-            this._lblMessage.Location = new System.Drawing.Point(16, 71);
+            this._lblMessage.Location = new System.Drawing.Point(16, 120);
             this._lblMessage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._lblMessage.Name = "_lblMessage";
             this._lblMessage.Size = new System.Drawing.Size(81, 16);
@@ -78,18 +80,39 @@
             // 
             // _tbMessage
             // 
-            this._tbMessage.Location = new System.Drawing.Point(120, 68);
+            this._tbMessage.Location = new System.Drawing.Point(120, 117);
             this._tbMessage.Margin = new System.Windows.Forms.Padding(4);
             this._tbMessage.Name = "_tbMessage";
             this._tbMessage.Size = new System.Drawing.Size(249, 22);
             this._tbMessage.TabIndex = 1;
             this._tbMessage.TextChanged += new System.EventHandler(this.TbMessage_TextChanged);
             // 
+            // _lbLogin
+            // 
+            this._lbLogin.AutoSize = true;
+            this._lbLogin.Location = new System.Drawing.Point(16, 71);
+            this._lbLogin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._lbLogin.Name = "_lbLogin";
+            this._lbLogin.Size = new System.Drawing.Size(46, 16);
+            this._lbLogin.TabIndex = 3;
+            this._lbLogin.Text = "Логин";
+            // 
+            // _tbLogin
+            // 
+            this._tbLogin.Location = new System.Drawing.Point(120, 68);
+            this._tbLogin.Margin = new System.Windows.Forms.Padding(4);
+            this._tbLogin.Name = "_tbLogin";
+            this._tbLogin.Size = new System.Drawing.Size(249, 22);
+            this._tbLogin.TabIndex = 4;
+            this._tbLogin.TextChanged += new System.EventHandler(this.TbLogin_TextChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 111);
+            this.ClientSize = new System.Drawing.Size(492, 155);
+            this.Controls.Add(this._tbLogin);
+            this.Controls.Add(this._lbLogin);
             this.Controls.Add(this._tbMessage);
             this.Controls.Add(this._lblMessage);
             this.Controls.Add(this._tbPipe);
@@ -111,5 +134,7 @@
         private System.Windows.Forms.TextBox _tbPipe;
         private System.Windows.Forms.Label _lblMessage;
         private System.Windows.Forms.TextBox _tbMessage;
+        private System.Windows.Forms.Label _lbLogin;
+        private System.Windows.Forms.TextBox _tbLogin;
     }
 }

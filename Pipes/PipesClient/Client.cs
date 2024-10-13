@@ -16,18 +16,24 @@ namespace Pipes
             InitializeComponent();
 
             Text += " - " + _hostName;
+            _tbLogin.Text = _hostName;
         }
 
 
-        private void TbMessage_TextChanged(object sender, EventArgs e)
+        private void TbMessage_TextChanged(object sender, EventArgs e) => SetEnabledBtnSend();
+
+        private void TbLogin_TextChanged(object sender, EventArgs e) => SetEnabledBtnSend();
+
+        private void SetEnabledBtnSend()
         {
-            _btnSend.Enabled = _tbMessage.Text.Length != 0;
-        }
+            _btnSend.Enabled = _tbMessage.Text.Length != 0 && _tbLogin.Text.Length != 0;
+        } 
+
 
         private void BtnSend_Click(object sender, EventArgs e)
         {
             uint bytesWritten = 0;
-            byte[] buff = Encoding.Unicode.GetBytes(_hostName + " >> " + _tbMessage.Text);
+            byte[] buff = Encoding.Unicode.GetBytes(_tbLogin.Text + " >> " + _tbMessage.Text);
 
             int pipeHandle = Kernel32.CreateFile(lpFileName: _tbPipe.Text, 
                 dwDesiredAccess: Enums.EFileAccess.GenericWrite, 
