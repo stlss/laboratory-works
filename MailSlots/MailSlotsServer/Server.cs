@@ -1,83 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Windows.Forms;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading;
-using System.Runtime.InteropServices;
+using MailSlotsInfrastructure;
 
 namespace MailSlots
 {
     public partial class frmMain : Form
     {
-        private int ClientHandleMailSlot;       // дескриптор мэйлслота
-        private string MailSlotName = "\\\\" + Dns.GetHostName() + "\\mailslot\\ServerMailslot";    // имя мэйлслота, Dns.GetHostName() - метод, возвращающий имя машины, на которой запущено приложение
-        private Thread t;                       // поток для обслуживания мэйлслота
-        private bool _continue = true;          // флаг, указывающий продолжается ли работа с мэйлслотом
+        private readonly int _clientHandleMailSlot;
+        private readonly Thread _thread;
+        private bool _continue = true;
 
-        // конструктор формы
+
         public frmMain()
         {
             InitializeComponent();
 
-            // создание мэйлслота
-            ClientHandleMailSlot = DIS.Import.CreateMailslot("\\\\.\\mailslot\\ServerMailslot", 0, DIS.Types.MAILSLOT_WAIT_FOREVER, 0);
+            var mailSlotName = "\\\\.\\mailslot\\ServerMailslot";
 
-            // вывод имени мэйлслота в заголовок формы, чтобы можно было его использовать для ввода имени в форме клиента, запущенного на другом вычислительном узле
-            this.Text += "     " + MailSlotName;
+            _clientHandleMailSlot = Kernel32.CreateMailslot(lpName: mailSlotName, 
+                nMaxMessageSize: 0, 
+                lReadTimeout: Constants.MAILSLOT_WAIT_FOREVER, 
+                securityAttributes: 0);
 
-            // создание потока, отвечающего за работу с мэйлслотом
+            var hostName = Dns.GetHostName();
+            Text += " - " + hostName;
+
             Thread t = new Thread(ReceiveMessage);
             t.Start();
         }
 
+
         private void ReceiveMessage()
         {
-            string msg = "";            // прочитанное сообщение
-            int MailslotSize = 0;       // максимальный размер сообщения
-            int lpNextSize = 0;         // размер следующего сообщения
-            int MessageCount = 0;       // количество сообщений в мэйлслоте
-            uint realBytesReaded = 0;   // количество реально прочитанных из мэйлслота байтов
+            string msg = string.Empty;
+            int MailslotSize = 0;
+            int lpNextSize = 0;
+            int MessageCount = 0;
+            uint realBytesReaded = 0;
 
-            // входим в бесконечный цикл работы с мэйлслотом
             while (_continue)
             {
-                // получаем информацию о состоянии мэйлслота
-                DIS.Import.GetMailslotInfo(ClientHandleMailSlot, MailslotSize, ref lpNextSize, ref MessageCount, 0);
+                Kernel32.GetMailslotInfo(hMailslot: _clientHandleMailSlot, 
+                    lpMaxMessageSize: MailslotSize, 
+                    lpNextSize: ref lpNextSize, 
+                    lpMessageCount: ref MessageCount, 
+                    lpReadTimeout: 0);
 
-                // если есть сообщения в мэйлслоте, то обрабатываем каждое из них
                 if (MessageCount > 0)
+                {
                     for (int i = 0; i < MessageCount; i++)
                     {
-                        byte[] buff = new byte[1024];                           // буфер прочитанных из мэйлслота байтов
-                        DIS.Import.FlushFileBuffers(ClientHandleMailSlot);      // "принудительная" запись данных, расположенные в буфере операционной системы, в файл мэйлслота
-                        DIS.Import.ReadFile(ClientHandleMailSlot, buff, 1024, ref realBytesReaded, 0);      // считываем последовательность байтов из мэйлслота в буфер buff
-                        msg = Encoding.Unicode.GetString(buff);                 // выполняем преобразование байтов в последовательность символов
-                        
-                        rtbMessages.Invoke((MethodInvoker)delegate
+                        Kernel32.FlushFileBuffers(_clientHandleMailSlot);
+
+                        byte[] buff = new byte[1024];
+
+                        Kernel32.ReadFile(_clientHandleMailSlot,
+                            lpBuffer: buff,
+                            nNumberOfBytesToRead: 1024,
+                            lpNumberOfBytesRead: ref realBytesReaded,
+                            lpOverlapped: 0);
+
+                        msg = Encoding.Unicode.GetString(buff);
+
+                        _rtbMessages.Invoke((MethodInvoker)delegate
                         {
-                            if (msg != "")
-                                rtbMessages.Text += "\n >> " + msg + " \n";     // выводим полученное сообщение на форму
+                            if (msg != string.Empty)
+                                _rtbMessages.Text += "\n >> " + msg;
                         });
-                        Thread.Sleep(500);                                      // приостанавливаем работу потока перед тем, как приcтупить к обслуживанию очередного клиента
+
+                        Thread.Sleep(500);
                     }
+                }
             }
         }
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _continue = false;      // сообщаем, что работа с мэйлслотом завершена
+            _continue = false;
 
-            if (t != null)
-                t.Abort();          // завершаем поток
+            if (_clientHandleMailSlot != -1)
+                Kernel32.CloseHandle(_clientHandleMailSlot);
 
-            if (ClientHandleMailSlot != -1)
-                DIS.Import.CloseHandle(ClientHandleMailSlot);            // закрываем дескриптор мэйлслота
+            _thread?.Abort();
         }
     }
 }

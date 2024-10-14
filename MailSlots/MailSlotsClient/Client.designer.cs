@@ -28,83 +28,90 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnSend = new System.Windows.Forms.Button();
-            this.tbMessage = new System.Windows.Forms.TextBox();
-            this.lblMailSlot = new System.Windows.Forms.Label();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.lblMessage = new System.Windows.Forms.Label();
-            this.tbMailSlot = new System.Windows.Forms.TextBox();
+            this._btnSend = new System.Windows.Forms.Button();
+            this._tbMessage = new System.Windows.Forms.TextBox();
+            this._lblMailSlot = new System.Windows.Forms.Label();
+            this._btnConnect = new System.Windows.Forms.Button();
+            this._lblMessage = new System.Windows.Forms.Label();
+            this._tbMailSlot = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // btnSend
+            // _btnSend
             // 
-            this.btnSend.Enabled = false;
-            this.btnSend.Location = new System.Drawing.Point(274, 44);
-            this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(91, 26);
-            this.btnSend.TabIndex = 3;
-            this.btnSend.Text = "Отправить";
-            this.btnSend.UseVisualStyleBackColor = true;
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            this._btnSend.Enabled = false;
+            this._btnSend.Location = new System.Drawing.Point(365, 54);
+            this._btnSend.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._btnSend.Name = "_btnSend";
+            this._btnSend.Size = new System.Drawing.Size(121, 32);
+            this._btnSend.TabIndex = 3;
+            this._btnSend.Text = "Отправить";
+            this._btnSend.UseVisualStyleBackColor = true;
+            this._btnSend.Click += new System.EventHandler(this.BtnSend_Click);
             // 
-            // tbMessage
+            // _tbMessage
             // 
-            this.tbMessage.Location = new System.Drawing.Point(86, 48);
-            this.tbMessage.Name = "tbMessage";
-            this.tbMessage.Size = new System.Drawing.Size(181, 20);
-            this.tbMessage.TabIndex = 1;
+            this._tbMessage.Location = new System.Drawing.Point(115, 59);
+            this._tbMessage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._tbMessage.Name = "_tbMessage";
+            this._tbMessage.Size = new System.Drawing.Size(240, 22);
+            this._tbMessage.TabIndex = 1;
             // 
-            // lblMailSlot
+            // _lblMailSlot
             // 
-            this.lblMailSlot.AutoSize = true;
-            this.lblMailSlot.Location = new System.Drawing.Point(12, 13);
-            this.lblMailSlot.Name = "lblMailSlot";
-            this.lblMailSlot.Size = new System.Drawing.Size(75, 26);
-            this.lblMailSlot.TabIndex = 2;
-            this.lblMailSlot.Text = "Введите имя \r\nмейлслота";
+            this._lblMailSlot.AutoSize = true;
+            this._lblMailSlot.Location = new System.Drawing.Point(9, 12);
+            this._lblMailSlot.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._lblMailSlot.Name = "_lblMailSlot";
+            this._lblMailSlot.Size = new System.Drawing.Size(93, 32);
+            this._lblMailSlot.TabIndex = 2;
+            this._lblMailSlot.Text = "Введите имя \r\nмейлслота";
             // 
-            // btnConnect
+            // _btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(274, 6);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(91, 26);
-            this.btnConnect.TabIndex = 2;
-            this.btnConnect.Text = "Подключиться";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            this._btnConnect.Location = new System.Drawing.Point(365, 7);
+            this._btnConnect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._btnConnect.Name = "_btnConnect";
+            this._btnConnect.Size = new System.Drawing.Size(121, 32);
+            this._btnConnect.TabIndex = 2;
+            this._btnConnect.Text = "Подключиться";
+            this._btnConnect.UseVisualStyleBackColor = true;
+            this._btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
-            // lblMessage
+            // _lblMessage
             // 
-            this.lblMessage.AutoSize = true;
-            this.lblMessage.Location = new System.Drawing.Point(7, 51);
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(65, 13);
-            this.lblMessage.TabIndex = 2;
-            this.lblMessage.Text = "Сообщение";
+            this._lblMessage.AutoSize = true;
+            this._lblMessage.Location = new System.Drawing.Point(9, 62);
+            this._lblMessage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._lblMessage.Name = "_lblMessage";
+            this._lblMessage.Size = new System.Drawing.Size(81, 16);
+            this._lblMessage.TabIndex = 2;
+            this._lblMessage.Text = "Сообщение";
             // 
-            // tbMailSlot
+            // _tbMailSlot
             // 
-            this.tbMailSlot.Location = new System.Drawing.Point(86, 10);
-            this.tbMailSlot.Name = "tbMailSlot";
-            this.tbMailSlot.Size = new System.Drawing.Size(181, 20);
-            this.tbMailSlot.TabIndex = 0;
-            this.tbMailSlot.Text = "\\\\.\\mailslot\\ServerMailslot";
+            this._tbMailSlot.Location = new System.Drawing.Point(115, 12);
+            this._tbMailSlot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._tbMailSlot.Name = "_tbMailSlot";
+            this._tbMailSlot.Size = new System.Drawing.Size(240, 22);
+            this._tbMailSlot.TabIndex = 0;
+            this._tbMailSlot.Text = "\\\\.\\mailslot\\ServerMailslot";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(375, 85);
-            this.Controls.Add(this.tbMailSlot);
-            this.Controls.Add(this.lblMessage);
-            this.Controls.Add(this.lblMailSlot);
-            this.Controls.Add(this.tbMessage);
-            this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.btnSend);
+            this.ClientSize = new System.Drawing.Size(500, 105);
+            this.Controls.Add(this._tbMailSlot);
+            this.Controls.Add(this._lblMessage);
+            this.Controls.Add(this._lblMailSlot);
+            this.Controls.Add(this._tbMessage);
+            this.Controls.Add(this._btnConnect);
+            this.Controls.Add(this._btnSend);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Клиент";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -112,12 +119,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnSend;
-        private System.Windows.Forms.TextBox tbMessage;
-        private System.Windows.Forms.Label lblMailSlot;
-        private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.Label lblMessage;
-        private System.Windows.Forms.TextBox tbMailSlot;
+        private System.Windows.Forms.Button _btnSend;
+        private System.Windows.Forms.TextBox _tbMessage;
+        private System.Windows.Forms.Label _lblMailSlot;
+        private System.Windows.Forms.Button _btnConnect;
+        private System.Windows.Forms.Label _lblMessage;
+        private System.Windows.Forms.TextBox _tbMailSlot;
     }
 }
 
