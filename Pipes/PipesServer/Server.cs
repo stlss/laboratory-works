@@ -80,15 +80,15 @@ namespace Pipes
                         {
                             case "присоединяется":
                                 clientLogins.Add(clientLogin);
-                                SendMessageClients(clientLogin, buff);
+                                SendMessageClients(buff);
                                 break;
 
                             case ">>":
-                                SendMessageClients(clientLogin, buff);
+                                SendMessageClients(buff);
                                 break;
 
                             case "выходит":
-                                SendMessageClients(clientLogin, buff);
+                                SendMessageClients(buff);
                                 clientLogins.Remove(clientLogin);
                                 break;
                         }
@@ -100,22 +100,27 @@ namespace Pipes
             }
         }
 
-        private void SendMessageClients(string clientLogin, byte[] buff)
+        private void SendMessageClients(byte[] buff)
         {
             foreach (var item in clientLogins)
             {
                 uint BytesWritten = 0;
 
-                var pipeClientHandle = Kernel32.CreateFile(_pipeClientLogin + item,
-                    Enums.EFileAccess.GenericWrite,
-                    Enums.EFileShare.Read,
-                    0,
-                    Enums.ECreationDisposition.OpenExisting,
-                    0,
-                    0);
+                var pipeClientHandle = Kernel32.CreateFile(lpFileName: _pipeClientLogin + item,
+                    dwDesiredAccess: Enums.EFileAccess.GenericWrite,
+                    dwShareMode: Enums.EFileShare.Read,
+                    lpSecurityAttributes: 0,
+                    dwCreationDisposition: Enums.ECreationDisposition.OpenExisting,
+                    dwFlagsAndAttributes: 0,
+                    hTemplateFile: 0);
 
-                Kernel32.WriteFile(pipeClientHandle, buff, Convert.ToUInt32(buff.Length), ref BytesWritten, 0);
-                Kernel32.CloseHandle(pipeClientHandle);
+                Kernel32.WriteFile(hFile: pipeClientHandle, 
+                    lpBuffer: buff, 
+                    nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length), 
+                    lpNumberOfBytesWritten: ref BytesWritten, 
+                    lpOverlapped: 0);
+
+                Kernel32.CloseHandle(hObject: pipeClientHandle);
             }
         }
 
