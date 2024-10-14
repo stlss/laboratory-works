@@ -16,7 +16,9 @@ namespace MailSlots
             InitializeComponent();
 
             var hostName = Dns.GetHostName();
+
             Text += " - " + hostName;
+            _tbLogin.Text = hostName;
         }
 
 
@@ -27,27 +29,18 @@ namespace MailSlots
             if (connectedMailSlot)
             {
                 _handleMailSlot = handleMailSlot;
+
                 _tbMailSlot.Enabled = false;
+                _tbLogin.Enabled = false;
                 _btnConnect.Enabled = false;
-                _btnSend.Enabled = true;
+
+                _tbMessage.Enabled = true;
             }
             else
             {
                 MessageBox.Show("Не удалось подключиться к мейлслоту");
             }
         }
-
-        private void BtnSend_Click(object sender, EventArgs e)
-        {
-            var message = Dns.GetHostName().ToString() + " >> " + _tbMessage.Text;
-            SendMessage(message);
-        }
-
-        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Kernel32.CloseHandle(_handleMailSlot);
-        }
-
 
         private bool TryConnectMailSlot(out int handleMailSlot)
         {
@@ -70,6 +63,13 @@ namespace MailSlots
             }
         }
 
+
+        private void BtnSend_Click(object sender, EventArgs e)
+        {
+            var message = _tbLogin.Text + " >> " + _tbMessage.Text;
+            SendMessage(message);
+        }
+
         private void SendMessage(string message)
         {
             uint bytesWritten = 0;
@@ -80,6 +80,28 @@ namespace MailSlots
                 nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length),
                 lpNumberOfBytesWritten: ref bytesWritten,
                 lpOverlapped: 0);
+        }
+
+
+        private void TbMailSlot_TextChanged(object sender, EventArgs e)
+        {
+            _btnConnect.Enabled = _tbMailSlot.Text.Length != 0;
+        }
+
+        private void TbLogin_TextChanged(object sender, EventArgs e)
+        {
+            _btnConnect.Enabled = _tbLogin.Text.Length != 0;
+        }
+
+        private void TbMessage_TextChanged(object sender, EventArgs e)
+        {
+            _btnSend.Enabled = _tbMessage.Text.Length != 0;
+        }
+
+
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Kernel32.CloseHandle(_handleMailSlot);
         }
     }
 }
