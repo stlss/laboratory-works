@@ -3,23 +3,32 @@ using System.Windows.Forms;
 using System.Net;
 using System.Threading;
 using MailSlotsInfrastructure;
+using System;
+using System.Collections.Generic;
 
 namespace MailSlots
 {
     public partial class frmMain : Form
     {
-        private readonly int _clientHandleMailSlot;
+        private readonly int _serverHandleMailSlot;
+
+        private readonly string _serverMailSlotName;
+        private readonly string _clientMailSlotName;
+
         private readonly Thread _thread;
         private bool _continue = true;
+
+        private readonly HashSet<string> _clientLogins = new HashSet<string>();
 
 
         public frmMain()
         {
             InitializeComponent();
 
-            var mailSlotName = "\\\\.\\mailslot\\ServerMailslot";
+            _serverMailSlotName = "\\\\.\\mailslot\\ServerMailslot";
+            _clientMailSlotName = "\\\\.\\mailslot\\ClientMailslot";
 
-            _clientHandleMailSlot = Kernel32.CreateMailslot(lpName: mailSlotName, 
+            _serverHandleMailSlot = Kernel32.CreateMailslot(lpName: _serverMailSlotName, 
                 nMaxMessageSize: 0, 
                 lReadTimeout: Constants.MAILSLOT_WAIT_FOREVER, 
                 securityAttributes: 0);
@@ -42,7 +51,7 @@ namespace MailSlots
 
             while (_continue)
             {
-                Kernel32.GetMailslotInfo(hMailslot: _clientHandleMailSlot, 
+                Kernel32.GetMailslotInfo(hMailslot: _serverHandleMailSlot, 
                     lpMaxMessageSize: MailslotSize, 
                     lpNextSize: ref lpNextSize, 
                     lpMessageCount: ref MessageCount, 
@@ -52,11 +61,11 @@ namespace MailSlots
                 {
                     for (int i = 0; i < MessageCount; i++)
                     {
-                        Kernel32.FlushFileBuffers(_clientHandleMailSlot);
+                        Kernel32.FlushFileBuffers(_serverHandleMailSlot);
 
                         byte[] buff = new byte[1024];
 
-                        Kernel32.ReadFile(_clientHandleMailSlot,
+                        Kernel32.ReadFile(_serverHandleMailSlot,
                             lpBuffer: buff,
                             nNumberOfBytesToRead: 1024,
                             lpNumberOfBytesRead: ref realBytesReaded,
@@ -68,6 +77,26 @@ namespace MailSlots
                         {
                             if (msg != string.Empty)
                                 _rtbMessages.Text += "\n >> " + msg;
+
+                            var words = msg.Split();
+                            var clientLogin = words[0];
+
+                            switch (words[1])
+                            {
+                                case "присоединяется":
+                                    _clientLogins.Add(clientLogin);
+                                    SendMessageClients(buff);
+                                    break;
+
+                                case ">>":
+                                    SendMessageClients(buff);
+                                    break;
+
+                                case "выходит":
+                                    _clientLogins.Remove(clientLogin);
+                                    SendMessageClients(buff);
+                                    break;
+                            }
                         });
 
                         Thread.Sleep(500);
@@ -76,12 +105,50 @@ namespace MailSlots
             }
         }
 
+        private void SendMessageClients(byte[] buff)
+        {
+            foreach (var item in _clientLogins)
+            {
+                uint bytesWritten = 0;
+
+                var handleMailSlot = Kernel32.CreateFile(lpFileName: _clientMailSlotName + item,
+                    dwDesiredAccess: Enums.EFileAccess.GenericWrite,
+                    dwShareMode: Enums.EFileShare.Read,
+                    lpSecurityAttributes: 0,
+                    dwCreationDisposition: Enums.ECreationDisposition.OpenExisting,
+                    dwFlagsAndAttributes: 0,
+                    hTemplateFile: 0);
+
+                //var pipeClientHandle = Kernel32.CreateFile(lpFileName: _clientMailSlotName + item,
+                //    dwDesiredAccess: Enums.EFileAccess.GenericWrite,
+                //    dwShareMode: Enums.EFileShare.Read,
+                //    lpSecurityAttributes: 0,
+                //    dwCreationDisposition: Enums.ECreationDisposition.OpenExisting,
+                //    dwFlagsAndAttributes: 0,
+                //    hTemplateFile: 0);
+
+                Kernel32.WriteFile(hFile: handleMailSlot,
+                    lpBuffer: buff,
+                    nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length),
+                    lpNumberOfBytesWritten: ref bytesWritten,
+                    lpOverlapped: 0);
+
+                //Kernel32.WriteFile(hFile: pipeClientHandle,
+                //    lpBuffer: buff,
+                //    nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length),
+                //    lpNumberOfBytesWritten: ref BytesWritten,
+                //    lpOverlapped: 0);
+
+                //Kernel32.CloseHandle(hObject: pipeClientHandle);
+            }
+        }
+
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             _continue = false;
 
-            if (_clientHandleMailSlot != -1)
-                Kernel32.CloseHandle(_clientHandleMailSlot);
+            if (_serverHandleMailSlot != -1)
+                Kernel32.CloseHandle(_serverHandleMailSlot);
 
             _thread?.Abort();
         }

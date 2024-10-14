@@ -3,13 +3,17 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using MailSlotsInfrastructure;
+using System.Threading;
 
 namespace MailSlots
 {
     public partial class frmMain : Form
     {
-        private int _handleMailSlot;
+        private int _serverHandleMailSlot;
+        private int _clientHandleMailSlot;
 
+        private readonly Thread _thread;
+        private bool _continue = true;
 
         public frmMain()
         {
@@ -19,6 +23,9 @@ namespace MailSlots
 
             Text += " - " + hostName;
             _tbLogin.Text = hostName;
+
+            Thread t = new Thread(ReceiveMessage);
+            t.Start();
         }
 
 
@@ -28,13 +35,18 @@ namespace MailSlots
 
             if (connectedMailSlot)
             {
-                _handleMailSlot = handleMailSlot;
+                _serverHandleMailSlot = handleMailSlot;
 
                 _tbMailSlot.Enabled = false;
                 _tbLogin.Enabled = false;
                 _btnConnect.Enabled = false;
 
                 _tbMessage.Enabled = true;
+
+                var clientMailSlotName = "\\\\.\\mailslot\\ClientMailslot" + _tbLogin.Text;
+                _clientHandleMailSlot = CreateHandleClientMailSlot(clientMailSlotName);
+
+                SendMessage(_tbLogin.Text + " присоединяется к чату!");
             }
             else
             {
@@ -63,6 +75,14 @@ namespace MailSlots
             }
         }
 
+        private static int CreateHandleClientMailSlot(string clientMailSlotName)
+        {
+            return Kernel32.CreateMailslot(lpName: clientMailSlotName,
+                nMaxMessageSize: 0,
+                lReadTimeout: Constants.MAILSLOT_WAIT_FOREVER,
+                securityAttributes: 0);
+        }
+
 
         private void BtnSend_Click(object sender, EventArgs e)
         {
@@ -75,7 +95,7 @@ namespace MailSlots
             uint bytesWritten = 0;
             byte[] buff = Encoding.Unicode.GetBytes(message);
 
-            Kernel32.WriteFile(hFile: _handleMailSlot,
+            Kernel32.WriteFile(hFile: _serverHandleMailSlot,
                 lpBuffer: buff,
                 nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length),
                 lpNumberOfBytesWritten: ref bytesWritten,
@@ -101,7 +121,62 @@ namespace MailSlots
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Kernel32.CloseHandle(_handleMailSlot);
+            if (_clientHandleMailSlot != 0)
+                SendMessage(_tbLogin.Text + " выходит из чата.");
+
+            Kernel32.CloseHandle(_serverHandleMailSlot);
+
+            _continue = false;
+
+            if (_clientHandleMailSlot != -1)
+                Kernel32.CloseHandle(_clientHandleMailSlot);
+
+            _thread?.Abort();
+        }
+
+
+        private void ReceiveMessage()
+        {
+            string msg = string.Empty;
+            int MailslotSize = 0;
+            int lpNextSize = 0;
+            int MessageCount = 0;
+            uint realBytesReaded = 0;
+
+            while (_continue)
+            {
+                Kernel32.GetMailslotInfo(hMailslot: _clientHandleMailSlot,
+                    lpMaxMessageSize: MailslotSize,
+                    lpNextSize: ref lpNextSize,
+                    lpMessageCount: ref MessageCount,
+                    lpReadTimeout: 0);
+
+                if (MessageCount > 0)
+                {
+                    for (int i = 0; i < MessageCount; i++)
+                    {
+                        Kernel32.FlushFileBuffers(_clientHandleMailSlot);
+
+                        byte[] buff = new byte[1024];
+
+                        Kernel32.ReadFile(_clientHandleMailSlot,
+                            lpBuffer: buff,
+                            nNumberOfBytesToRead: 1024,
+                            lpNumberOfBytesRead: ref realBytesReaded,
+                            lpOverlapped: 0);
+
+                        msg = Encoding.Unicode.GetString(buff);
+
+                        _rtbMessages.Invoke((MethodInvoker)delegate
+                        {
+                            if (msg != string.Empty)
+                                _rtbMessages.Text += "\n >> " + msg;
+                        });
+
+                        Thread.Sleep(500);
+                    }
+                }
+            }
         }
     }
 }
