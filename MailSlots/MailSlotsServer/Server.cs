@@ -19,7 +19,6 @@ namespace MailSlots
         private bool _continue = true;
 
         private readonly HashSet<string> _clientLogins = new HashSet<string>();
-        private bool _crutch = true;
 
 
         public frmMain()
@@ -71,11 +70,6 @@ namespace MailSlots
                             nNumberOfBytesToRead: 1024,
                             lpNumberOfBytesRead: ref realBytesReaded,
                             lpOverlapped: 0);
-
-                        _crutch = !_crutch;
-
-                        if (!_crutch)
-                            continue;
 
                         msg = Encoding.Unicode.GetString(buff);
 
@@ -151,7 +145,11 @@ namespace MailSlots
                 securityAttributes: 0);
 
             if (serverHandleMailSlot != -1)
+            {
                 _serverHandleMailSlot = serverHandleMailSlot;
+                _rtbMessages.Clear();
+                _clientLogins.Clear();
+            }
         }
     }
 }
