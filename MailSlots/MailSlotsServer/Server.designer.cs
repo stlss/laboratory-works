@@ -56,7 +56,7 @@
             // 
             // _tbMailSlot
             // 
-            this._tbMailSlot.Location = new System.Drawing.Point(162, 22);
+            this._tbMailSlot.Location = new System.Drawing.Point(158, 22);
             this._tbMailSlot.Margin = new System.Windows.Forms.Padding(4);
             this._tbMailSlot.Name = "_tbMailSlot";
             this._tbMailSlot.Size = new System.Drawing.Size(200, 22);
