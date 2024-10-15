@@ -10,7 +10,7 @@ namespace MailSlots
 {
     public partial class frmMain : Form
     {
-        private readonly int _serverHandleMailSlot;
+        private int _serverHandleMailSlot;
 
         private readonly string _serverMailSlotName;
         private readonly string _clientMailSlotName;
@@ -125,27 +125,11 @@ namespace MailSlots
                     dwFlagsAndAttributes: 0,
                     hTemplateFile: 0);
 
-                //var pipeClientHandle = Kernel32.CreateFile(lpFileName: _clientMailSlotName + item,
-                //    dwDesiredAccess: Enums.EFileAccess.GenericWrite,
-                //    dwShareMode: Enums.EFileShare.Read,
-                //    lpSecurityAttributes: 0,
-                //    dwCreationDisposition: Enums.ECreationDisposition.OpenExisting,
-                //    dwFlagsAndAttributes: 0,
-                //    hTemplateFile: 0);
-
                 Kernel32.WriteFile(hFile: handleMailSlot,
                     lpBuffer: buff,
                     nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length),
                     lpNumberOfBytesWritten: ref bytesWritten,
                     lpOverlapped: 0);
-
-                //Kernel32.WriteFile(hFile: pipeClientHandle,
-                //    lpBuffer: buff,
-                //    nNumberOfBytesToWrite: Convert.ToUInt32(buff.Length),
-                //    lpNumberOfBytesWritten: ref BytesWritten,
-                //    lpOverlapped: 0);
-
-                //Kernel32.CloseHandle(hObject: pipeClientHandle);
             }
         }
 
@@ -157,6 +141,17 @@ namespace MailSlots
                 Kernel32.CloseHandle(_serverHandleMailSlot);
 
             _thread?.Abort();
+        }
+
+        private void BtnConnect_Click(object sender, EventArgs e)
+        {
+            var serverHandleMailSlot = Kernel32.CreateMailslot(lpName: "\\\\.\\mailslot\\" + _tbMailSlot.Text,
+                nMaxMessageSize: 0,
+                lReadTimeout: Constants.MAILSLOT_WAIT_FOREVER,
+                securityAttributes: 0);
+
+            if (serverHandleMailSlot != -1)
+                _serverHandleMailSlot = serverHandleMailSlot;
         }
     }
 }
