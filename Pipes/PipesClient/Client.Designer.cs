@@ -113,6 +113,7 @@
             // 
             this._rtbMessages.Location = new System.Drawing.Point(19, 158);
             this._rtbMessages.Name = "_rtbMessages";
+            this._rtbMessages.ReadOnly = true;
             this._rtbMessages.Size = new System.Drawing.Size(495, 208);
             this._rtbMessages.TabIndex = 5;
             this._rtbMessages.Text = "";
