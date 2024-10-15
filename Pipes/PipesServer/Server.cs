@@ -19,7 +19,7 @@ namespace Pipes
         private bool _continue = true;
         
 
-        private readonly HashSet<string> clientLogins = new HashSet<string>();
+        private readonly HashSet<string> _clientLogins = new HashSet<string>();
 
 
         public frmMain()
@@ -79,7 +79,7 @@ namespace Pipes
                         switch (words[1])
                         {
                             case "присоединяется":
-                                clientLogins.Add(clientLogin);
+                                _clientLogins.Add(clientLogin);
                                 SendMessageClients(buff);
                                 break;
 
@@ -89,7 +89,7 @@ namespace Pipes
 
                             case "выходит":
                                 SendMessageClients(buff);
-                                clientLogins.Remove(clientLogin);
+                                _clientLogins.Remove(clientLogin);
                                 break;
                         }
                     });
@@ -102,7 +102,7 @@ namespace Pipes
 
         private void SendMessageClients(byte[] buff)
         {
-            foreach (var item in clientLogins)
+            foreach (var item in _clientLogins)
             {
                 uint BytesWritten = 0;
 
