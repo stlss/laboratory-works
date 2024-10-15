@@ -30,7 +30,7 @@ def _calculate_p_value():
 
 
 _p = _calculate_p_value()
-_mod = 1e18 + 7
+_mod = int(1e18 + 7)
 
 
 def _calculate_hash(values):
@@ -52,11 +52,11 @@ class GameState(object):
         self.previous_game_state = previous_game_state
         self.hash = _calculate_hash(values)
 
+    def print(self):
+        print('\n'.join([' '.join([str(x) for x in line]) for line in self.values]))
+
     def __getitem__(self, indexes):
         return self.values[indexes[0]][indexes[1]]
-
-    def __setitem__(self, indexes, value):
-        self.values[indexes[0]][indexes[1]] = value
 
     def __hash__(self):
         return self.hash
@@ -64,11 +64,8 @@ class GameState(object):
     def __eq__(self, other):
         return isinstance(other, GameState) and self.values == other.values
 
-    def __le__(self, other):
+    def __lt__(self, other):
         return isinstance(other, GameState) and self.values < other.values
-
-    def __str__(self):
-        return '\n'.join([' '.join([str(x) for x in line]) for line in self.values])
 
 
 def print_game_states(game_states):
@@ -77,7 +74,7 @@ def print_game_states(game_states):
 
     def print_game_state(num, game_state):
         print(f'{num})')
-        print(game_state)
+        game_state.print()
 
     print_game_state(1, game_states[0])
 

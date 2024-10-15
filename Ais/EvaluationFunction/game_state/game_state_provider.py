@@ -29,17 +29,17 @@ def _validate_indexes(indexes):
 
 
 def _try_move(game_state, shifts):
-    indexes1 = _find_indexes_empty_cell(game_state)
-    indexes2 = indexes1[0] + shifts[0], indexes1[1] + shifts[1]
+    i1, j1 = _find_indexes_empty_cell(game_state)
+    i2, j2 = i1 + shifts[0], j1 + shifts[1]
 
-    if not _validate_indexes(indexes2):
+    if not _validate_indexes((i2, j2)):
         return False, game_state
 
     new_values = deepcopy(game_state.values)
-    new_game_state = GameState(new_values)
+    new_values[i1][j1] = game_state[i2, j2]
+    new_values[i2][j2] = game_state[i1, j1]
 
-    new_game_state[indexes1] = game_state[indexes2]
-    new_game_state[indexes2] = game_state[indexes1]
+    new_game_state = GameState(new_values, game_state.moves + 1, game_state)
 
     return True, new_game_state
 
@@ -70,7 +70,18 @@ def get_random_game_state(moves=1000):
         index = randint(0, len(_move_functions) - 1)
         game_state = _move_functions[index](game_state)[1]
 
+    game_state.previous_game_state = None
     return game_state
+
+
+def get_incorrect_random_game_state(moves=1000):
+    game_state = get_random_game_state(moves)
+
+    new_values = game_state.values
+    new_values[0][0], new_values[1][1] = new_values[1][1], new_values[0][0]
+
+    new_game_state = GameState(new_values)
+    return new_game_state
 
 
 def get_next_game_states(game_state):
