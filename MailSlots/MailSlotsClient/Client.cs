@@ -37,7 +37,6 @@ namespace MailSlots
             {
                 _serverHandleMailSlot = handleMailSlot;
 
-                _tbMailSlot.Enabled = false;
                 _tbLogin.Enabled = false;
                 _btnConnect.Enabled = false;
 
@@ -58,7 +57,7 @@ namespace MailSlots
         {
             try
             {
-                handleMailSlot = Kernel32.CreateFile(lpFileName: _tbMailSlot.Text,
+                handleMailSlot = Kernel32.CreateFile(lpFileName: "\\\\*\\mailslot\\" + _tbMailSlot.Text,
                     dwDesiredAccess: Enums.EFileAccess.GenericWrite,
                     dwShareMode: Enums.EFileShare.Read,
                     lpSecurityAttributes: 0,
@@ -105,6 +104,24 @@ namespace MailSlots
 
         private void TbMailSlot_TextChanged(object sender, EventArgs e)
         {
+            if (!_btnConnect.Enabled)
+            {
+                _btnConnect.Enabled = true;
+
+                _btnSend.Enabled = false;
+
+                _tbMessage.Enabled = false;
+                _tbMessage.Text = string.Empty;
+
+                _tbLogin.Enabled = true;
+
+                SendMessage(_tbLogin.Text + " выходит из чата.");
+                _rtbMessages.Text = string.Empty;
+
+                if (_clientHandleMailSlot != -1)
+                    Kernel32.CloseHandle(_clientHandleMailSlot);
+            }
+
             _btnConnect.Enabled = _tbMailSlot.Text.Length != 0;
         }
 

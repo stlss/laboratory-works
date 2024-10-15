@@ -99,7 +99,7 @@
             this._tbMailSlot.Name = "_tbMailSlot";
             this._tbMailSlot.Size = new System.Drawing.Size(240, 22);
             this._tbMailSlot.TabIndex = 0;
-            this._tbMailSlot.Text = "\\\\.\\mailslot\\ServerMailslot";
+            this._tbMailSlot.Text = "ServerMailslot";
             this._tbMailSlot.TextChanged += new System.EventHandler(this.TbMailSlot_TextChanged);
             // 
             // _lbLogin
