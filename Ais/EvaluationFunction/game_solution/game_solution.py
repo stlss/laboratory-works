@@ -28,10 +28,10 @@ class GameSolution(object):
         print(f'Размер траектории решения - {trajectory_len}.')
         print(f'Эффективность поиска решения - {"{:.2f}".format(efficiency)}%.')
 
-    def print_trajectory(self):
+    def print_trajectory(self, crop=False):
         if self.trajectory is None:
             print('Траектория решения отсутствует.')
             return
 
         print('Траектория решения:\n')
-        print_game_states(self.trajectory)
+        print_game_states(self.trajectory, crop)

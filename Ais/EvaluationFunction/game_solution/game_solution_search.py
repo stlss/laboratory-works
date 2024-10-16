@@ -47,7 +47,7 @@ def find_game_solution(init_game_state, k_g=1, k_h=1, max_iterations=1e5):
         iterations += 1
 
     fail_reason = 'Рассмотрены все возможные состояния игры' if len(tree_vertices) <= max_iterations else \
-        'Превышено максимально число рассмотренных состояний игры'
+        'Превышено максимально число итераций поиска игры'
 
     return GameSolution(init_game_state=init_game_state,
                         game_states=tree_vertices,

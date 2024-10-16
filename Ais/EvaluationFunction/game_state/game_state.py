@@ -71,16 +71,38 @@ class GameState(object):
         print(self)
 
 
-def print_game_states(game_states):
+def _print_game_state(num, game_state):
+    print(f'{num})')
+    game_state.print()
+
+
+_crop = 2
+
+
+def _print_crop_game_states(game_states):
+    n = len(game_states)
+
+    for i in range(_crop):
+        _print_game_state(i + 1, game_states[i])
+        print()
+
+    print('...')
+
+    for i in range(n - _crop, n):
+        print()
+        _print_game_state(i + 1, game_states[i])
+
+
+def print_game_states(game_states, crop=False):
     if len(game_states) == 0:
         return
 
-    def print_game_state(num, game_state):
-        print(f'{num})')
-        game_state.print()
+    if crop and len(game_states) > 2 * _crop:
+        _print_crop_game_states(game_states)
+        return
 
-    print_game_state(1, game_states[0])
+    _print_game_state(1, game_states[0])
 
     for i in range(1, len(game_states)):
         print()
-        print_game_state(i + 1, game_states[i])
+        _print_game_state(i + 1, game_states[i])

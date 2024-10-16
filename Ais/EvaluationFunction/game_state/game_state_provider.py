@@ -28,7 +28,7 @@ def _validate_indexes(indexes):
     return 0 <= indexes[0] < rows and 0 <= indexes[1] < columns
 
 
-def _try_move(game_state, shifts):
+def _try_move(game_state, shifts, create_connection=False):
     i1, j1 = _find_indexes_empty_cell(game_state)
     i2, j2 = i1 + shifts[0], j1 + shifts[1]
 
@@ -39,25 +39,28 @@ def _try_move(game_state, shifts):
     new_values[i1][j1] = game_state[i2, j2]
     new_values[i2][j2] = game_state[i1, j1]
 
-    new_game_state = GameState(new_values, game_state.moves + 1, game_state)
+    if create_connection:
+        new_game_state = GameState(new_values, game_state.moves + 1, game_state)
+    else:
+        new_game_state = GameState(new_values)
 
     return True, new_game_state
 
 
-def _try_move_left(game_state):
-    return _try_move(game_state, (0, -1))
+def _try_move_left(game_state, create_connection=False):
+    return _try_move(game_state, (0, -1), create_connection)
 
 
-def _try_move_right(game_state):
-    return _try_move(game_state, (0, 1))
+def _try_move_right(game_state, create_connection=False):
+    return _try_move(game_state, (0, 1), create_connection)
 
 
-def _try_move_top(game_state):
-    return _try_move(game_state, (-1, 0))
+def _try_move_top(game_state, create_connection=False):
+    return _try_move(game_state, (-1, 0), create_connection)
 
 
-def _try_move_bottom(game_state):
-    return _try_move(game_state, (1, 0))
+def _try_move_bottom(game_state, create_connection=False):
+    return _try_move(game_state, (1, 0), create_connection)
 
 
 _move_functions = _try_move_top, _try_move_right, _try_move_bottom, _try_move_left
@@ -70,7 +73,6 @@ def get_random_game_state(moves=1000):
         index = randint(0, len(_move_functions) - 1)
         game_state = _move_functions[index](game_state)[1]
 
-    game_state.previous_game_state = None
     return game_state
 
 
@@ -85,6 +87,6 @@ def get_incorrect_random_game_state(moves=1000):
 
 
 def get_next_game_states(game_state):
-    move_results = [function(game_state) for function in _move_functions]
+    move_results = [function(game_state, create_connection=True) for function in _move_functions]
     game_states = [result[1] for result in move_results if result[0]]
     return game_states
