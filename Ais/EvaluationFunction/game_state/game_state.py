@@ -52,8 +52,8 @@ class GameState(object):
         self.previous_game_state = previous_game_state
         self.hash = _calculate_hash(values)
 
-    def print(self):
-        print('\n'.join([' '.join([str(x) for x in line]) for line in self.values]))
+    def __str__(self):
+        return '\n'.join([' '.join([str(x) for x in line]) for line in self.values])
 
     def __getitem__(self, indexes):
         return self.values[indexes[0]][indexes[1]]
@@ -66,6 +66,9 @@ class GameState(object):
 
     def __lt__(self, other):
         return isinstance(other, GameState) and self.values < other.values
+
+    def print(self):
+        print(self)
 
 
 def print_game_states(game_states):
