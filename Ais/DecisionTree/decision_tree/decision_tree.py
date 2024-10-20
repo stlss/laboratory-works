@@ -18,34 +18,28 @@ class DecisionTree(object):
 def _get_digraph(tree, parent_name=None, graph=None, edge_label=None, path=""):
     if graph is None:
         graph = Digraph(format='png')
-        graph.attr('graph', rankdir='TB')  # Направление сверху вниз
+        graph.attr('graph', rankdir='TB')
 
-    # Определяем имя текущего узла
     if isinstance(tree, dict):
-        node_name = list(tree.keys())[0]  # Первый ключ в словаре — это признак
-        node_label = node_name  # Имя узла — это название признака
+        node_name = list(tree.keys())[0]
+        node_label = node_name
         graph.attr('node', shape='ellipse', style='filled', color='lightblue2', fontname="Helvetica")
     else:
-        node_name = str(tree)  # Листовой узел
+        node_name = str(tree)
         node_label = node_name
         graph.attr('node', shape='ellipse', style='filled', color='yellow', fontname="Helvetica")
 
-    # Генерация уникального идентификатора для узла с учётом пути
     unique_node_id = f"{path}_{node_name}"
 
-    # Если это не корневой узел, то добавляем ребро от родителя
     if parent_name is not None:
         graph.node(unique_node_id, label=node_label)
         graph.edge(parent_name, unique_node_id, label=edge_label)
     else:
-        # Добавляем корневой узел
         graph.node(unique_node_id, label=node_label)
 
-    # Если текущий узел — это словарь, рекурсивно обрабатываем его поддеревья
     if isinstance(tree, dict):
-        attribute = list(tree.keys())[0]  # Признак для разделения
+        attribute = list(tree.keys())[0]
 
-        # Для каждого значения признака строим ветви
         items = list(tree[attribute].items())
         items.sort(key=lambda x: float(x[0].split(' - ')[0]))
 

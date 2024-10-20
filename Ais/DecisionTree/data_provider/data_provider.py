@@ -1,8 +1,8 @@
 import pandas as pd
 from pprint import pprint
 
-_all = 100
-_train = 80
+_all = 1500
+_train = 100
 
 _original_df = pd.read_csv('data_provider/data.csv')
 _modified_df = _original_df[(_original_df['sc_w'] > 0) & (_original_df['sc_h'] > 0)]
@@ -48,7 +48,7 @@ def _get_screen_squares():
 
 
 def _get_price_ranges():
-    return _cropped_modified_df['price_range'] + 1
+    return _cropped_modified_df['price_range']
 
 
 def _to_ranges(values):
