@@ -2,7 +2,7 @@ import pandas as pd
 from pprint import pprint
 
 _all = 100
-_train, _test = 80, 20
+_train = 80
 
 _original_df = pd.read_csv('data_provider/data.csv')
 _modified_df = _original_df[(_original_df['sc_w'] > 0) & (_original_df['sc_h'] > 0)]
@@ -102,7 +102,7 @@ def _get_data():
 
 _data = _get_data()
 _train_data = _data[:_train]
-_test_data = _data[_train:_test]
+_test_data = _data[_train:]
 
 
 def get_train_data():
