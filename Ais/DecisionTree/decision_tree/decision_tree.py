@@ -11,6 +11,9 @@ class DecisionTree(object):
     def get_leaf_number(self):
         return _get_leaf_number(self.dictionary)
 
+    def predict(self, d):
+        return _predict(self.dictionary, d)
+
 
 def _get_digraph(tree, parent_name=None, graph=None, edge_label=None, path=""):
     if graph is None:
@@ -62,3 +65,18 @@ def _get_leaf_number(tree):
         number += _get_leaf_number(subtree)
 
     return number
+
+
+def _predict(tree, d):
+    d_value = d[list(tree.keys())[0]]
+    tree_value = list(tree.values())[0]
+
+    if d_value not in tree_value:
+        return None
+
+    tree = tree_value[d_value]
+
+    if isinstance(tree, str):
+        return tree
+
+    return _predict(tree, d)
