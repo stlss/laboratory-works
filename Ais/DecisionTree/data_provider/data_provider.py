@@ -126,3 +126,19 @@ def print_unique_column_values():
 
         pprint(unique_values)
         print()
+
+
+def get_price_range_mean_values():
+    result = list()
+    for column in _data.columns:
+        if column == _price_range:
+            continue
+
+        unique_values = list(map(str, _data[column].unique()))
+        unique_values.sort(key=lambda x: float(x.split(' - ')[0]))
+
+        mean_values = [_train_data[_train_data[column] == x][_price_range].astype(int).mean() for x in unique_values]
+
+        result.append((column, mean_values))
+
+    return result
